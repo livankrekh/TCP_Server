@@ -4,13 +4,14 @@ QT -= gui
 
 CONFIG += c++11
 
-TARGET = server
+TARGET = client
 CONFIG += console
 CONFIG -= app_bundle
 
 TEMPLATE = app
 
 SOURCES += main.cpp \
-    mainserver.cpp
+    client.cpp
 
-HEADERS += mainserver.hpp
+HEADERS += \
+    client.h

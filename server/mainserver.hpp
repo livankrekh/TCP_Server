@@ -13,7 +13,7 @@ class MainServer : public QObject
 
 public:
     explicit MainServer(QObject *parent = nullptr);
-    explicit MainServer(int port, QObject *parent = nullptr);
+    void    startServer(int port);
     virtual ~MainServer();
 
 public slots:

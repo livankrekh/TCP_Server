@@ -1,26 +1,15 @@
 #include "mainserver.hpp"
 
-MainServer::MainServer(QObject *parent) : port(2307), status(0)
-{
-    this->tcpServer = new QTcpServer(this);
-    QObject::connect(tcpServer, SIGNAL(newConnection()), this, SLOT(newClient()));
-    if (!tcpServer->listen(QHostAddress::Any, port) && this->status == false)
-    {
-        qDebug() <<  QObject::tr("Unable to start the server: %1.").arg(tcpServer->errorString());
-    }
-    else
-    {
-        this->status = true;
-        qDebug() << QString::fromUtf8("Server has been started!");
-        qDebug() << "TCPSocket listen on port " << tcpServer->isListening();
-    }
+MainServer::MainServer(QObject *parent) {
 }
 
-MainServer::MainServer(int port, QObject *parent) : port(2307), status(0)
+void MainServer::startServer(int port)
 {
     this->tcpServer = new QTcpServer(this);
     if (port > 0)
         this->port = port;
+    else
+        this->port = 2307;
     QObject::connect(tcpServer, SIGNAL(newConnection()), this, SLOT(newClient()));
     if (!tcpServer->listen(QHostAddress::Any, port) && this->status == 0)
     {
@@ -30,7 +19,7 @@ MainServer::MainServer(int port, QObject *parent) : port(2307), status(0)
     {
         this->status = 1;
         qDebug() << QString::fromUtf8("Server has been started!");
-        qDebug() << "TCPSocket listen on port " << tcpServer->isListening();
+        qDebug() << "TCPSocket listen on port " << tcpServer->serverPort();
     }
 }
 
@@ -58,13 +47,13 @@ void MainServer::readSocket()
     if (!users_socket || users_socket->state() != QTcpSocket::ConnectedState)
         return ;
     bzero(data, 10);
-    data[2] = 2;
+    data[0] = 2;
     desc = users_socket->socketDescriptor();
     qDebug() << "Received data from: " << users_socket->peerAddress() << ":" << users_socket->peerPort();
     qDebug() << users_socket->readAll();
 
     users_socket->write(data);
-    qDebug() << "Send data " << data;
+    qDebug() << "Send data";
 
     users_socket->close();
     clients.remove(desc);
