@@ -24,7 +24,7 @@ private slots:
     void onReadReady();
     void onConnected();
     void onDisconnected();
-    void onError();
+    void onError(QAbstractSocket::SocketError err);
 
 private:
     QTcpSocket      *socket;

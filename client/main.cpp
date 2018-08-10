@@ -1,13 +1,14 @@
 #include <QCoreApplication>
 #include "client.h"
 
+int Client::i = 0;
+int Client::packet = 0;
+
 int main(int argc, char *argv[])
 {
-    QCoreApplication a(argc, argv);
-    QTime midnight(0,0,0);
-    Client::i = 0;
-    Client::packet = 0;
-    Client client_pool[8];
+    QCoreApplication    a(argc, argv);
+    QTime               midnight(0,0,0);
+    Client              client_pool[8];
 
     qsrand(midnight.secsTo(QTime::currentTime()));
 

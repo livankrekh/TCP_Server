@@ -1,6 +1,6 @@
 #include "mainserver.hpp"
 
-MainServer::MainServer(QObject *parent) {
+MainServer::MainServer() {
 }
 
 void MainServer::startServer(int port)
@@ -18,8 +18,8 @@ void MainServer::startServer(int port)
     else
     {
         this->status = 1;
-        qDebug() << QString::fromUtf8("Server has been started!");
-        qDebug() << "TCPSocket listen on port " << tcpServer->serverPort();
+        qDebug() << "Server has been started!";
+        qDebug() << "\033[1m\033[32mTCPSocketServer listen on port" << tcpServer->serverPort() << "\033[0m";
     }
 }
 
@@ -34,35 +34,38 @@ void MainServer::newClient()
     socketDesc = newReadSocket->socketDescriptor();
     this->clients[socketDesc] = newReadSocket;
     connect(newReadSocket, SIGNAL(readyRead()), this, SLOT(readSocket()));
-    connect(newReadSocket, SIGNAL(disconnected(QTcpSocket *)), this, SLOT(disconnect_socket(QTcpSocket *)));
-    qDebug() << "Client " << newReadSocket->peerAddress() << " is connected by " << newReadSocket->peerPort() << "port";
+    connect(newReadSocket, SIGNAL(disconnected()), this, SLOT(disconnect_socket()));
+    qDebug() << "\033[1m\033[36mClient " << newReadSocket->peerAddress() << " is connected by " << newReadSocket->peerPort() << "port\033[0m";
 }
 
 void MainServer::readSocket()
 {
     QTcpSocket *users_socket = static_cast<QTcpSocket *>(QObject::sender());
-    int         desc = -1;
     char data[10];
 
     if (!users_socket || users_socket->state() != QTcpSocket::ConnectedState)
         return ;
     bzero(data, 10);
     data[0] = 2;
-    desc = users_socket->socketDescriptor();
-    qDebug() << "Received data from: " << users_socket->peerAddress() << ":" << users_socket->peerPort();
+    qDebug() << "\033[1m\033[32mReceived data from: " << users_socket->peerAddress() << ":" << users_socket->peerPort() << "\033[0m";
     qDebug() << users_socket->readAll();
 
     users_socket->write(data);
     qDebug() << "Send data";
 
     users_socket->close();
-    clients.remove(desc);
 }
 
-void MainServer::disconnect_socket(QTcpSocket *host)
+void MainServer::disconnect_socket()
 {
-    qDebug() << "Host " << host->peerAddress() << ":" << host->peerPort() << " disconnected!";
-    clients.remove(host->socketDescriptor());
+    foreach(int i, clients.keys())
+    {
+        if (clients[i]->state() != QTcpSocket::SocketState::ConnectedState && clients[i]->state() != QTcpSocket::SocketState::ConnectingState)
+        {
+            qDebug() << "\033[1m\033[31mHost #" << i << " is disconnected!\033[0m";
+            clients.remove(i);
+        }
+    }
 }
 
 MainServer::~MainServer()

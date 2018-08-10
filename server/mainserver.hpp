@@ -12,14 +12,14 @@ class MainServer : public QObject
     Q_OBJECT
 
 public:
-    explicit MainServer(QObject *parent = nullptr);
+    explicit MainServer();
     void    startServer(int port);
     virtual ~MainServer();
 
 public slots:
     void newClient();
     void readSocket();
-    void disconnect_socket(QTcpSocket *host);
+    void disconnect_socket();
 
 private:
     QTcpServer              *tcpServer;
