@@ -15,6 +15,6 @@ Client usage:
 ./client (port) (number_of_clients) (timeout_in_msec)
 
 By default:
-port = 2307
-numbers_of_clients = 8
+port = 2307,
+numbers_of_clients = 8,
 timeout_in_msec = 1000
