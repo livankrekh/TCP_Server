@@ -1,6 +1,7 @@
 #include "mainserver.hpp"
 
-MainServer::MainServer() {
+MainServer::MainServer()
+{
 }
 
 void MainServer::startServer(int port)
@@ -35,23 +36,25 @@ void MainServer::newClient()
     this->clients[socketDesc] = newReadSocket;
     connect(newReadSocket, SIGNAL(readyRead()), this, SLOT(readSocket()));
     connect(newReadSocket, SIGNAL(disconnected()), this, SLOT(disconnect_socket()));
-    qDebug() << "\033[1m\033[36mClient " << newReadSocket->peerAddress() << " is connected by " << newReadSocket->peerPort() << "port\033[0m";
+    qDebug() << "\033[1m\033[36mClient #" << newReadSocket->socketDescriptor()<< newReadSocket->peerAddress()
+             << "is connected by" << newReadSocket->peerPort() << "port\033[0m";
 }
 
 void MainServer::readSocket()
 {
-    QTcpSocket *users_socket = static_cast<QTcpSocket *>(QObject::sender());
-    char data[10];
+    QTcpSocket      *users_socket = static_cast<QTcpSocket *>(QObject::sender());
+    char            data[10];
 
     if (!users_socket || users_socket->state() != QTcpSocket::ConnectedState)
         return ;
-    bzero(data, 10);
-    data[0] = 2;
-    qDebug() << "\033[1m\033[32mReceived data from: " << users_socket->peerAddress() << ":" << users_socket->peerPort() << "\033[0m";
+    for (int i = 0; i < 10; i++)
+        data[i] = qrand() % 255;
+    qDebug() << "\033[1m\033[32mReceived data from host #" << users_socket->socketDescriptor()
+             << users_socket->peerAddress() << ":" << users_socket->peerPort() << "\033[0m";
     qDebug() << users_socket->readAll();
 
     users_socket->write(data);
-    qDebug() << "Send data";
+    qDebug() << "\033[1m\033[32mSend data!\033[0m";
 
     users_socket->close();
 }

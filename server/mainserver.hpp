@@ -6,6 +6,7 @@
 #include <QTcpSocket>
 #include <QByteArray>
 #include <QDebug>
+#include <QTime>
 
 class MainServer : public QObject
 {

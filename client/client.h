@@ -6,7 +6,9 @@
 #include <QTcpSocket>
 #include <QByteArray>
 #include <QDebug>
-#include <QTime>
+#include <iostream>
+#include <bitset>
+#include <unistd.h>
 
 class Client : public QObject
 {
@@ -21,6 +23,7 @@ public:
     static int      packet;
 
 private slots:
+    void timerEnd();
     void onReadReady();
     void onConnected();
     void onDisconnected();
