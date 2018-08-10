@@ -19,8 +19,9 @@ public:
     void        startSend();
     virtual     ~Client();
 
-    static int      i;
-    static int      packet;
+    static int                  i;
+    static int                  packet;
+    static unsigned short int   port;
 
 private slots:
     void timerEnd();
@@ -33,7 +34,6 @@ private:
     QTcpSocket      *socket;
     QString         name;
     QString         adress;
-    unsigned int    port;
     QDateTime       startTime;
     size_t          data_size;
 };

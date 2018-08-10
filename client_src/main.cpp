@@ -5,6 +5,7 @@
 
 int Client::i = 0;
 int Client::packet = 0;
+unsigned short int Client::port = 2307;
 
 int main(int argc, char *argv[])
 {
@@ -14,8 +15,11 @@ int main(int argc, char *argv[])
     int                 timeout = 1000;
 
     if (argc > 1)
+        Client::port = atoi(argv[1]);
+
+    if (argc > 2)
     {
-        pool_size = atoi(argv[1]);
+        pool_size = atoi(argv[2]);
         if (pool_size <= 0)
             pool_size = 4;
     }
@@ -23,8 +27,8 @@ int main(int argc, char *argv[])
     Client              client_pool[pool_size];
     QTimer              timers[pool_size];
 
-    if (argc > 2)
-        timeout = atoi(argv[2]);
+    if (argc > 3)
+        timeout = atoi(argv[3]);
 
     qsrand(midnight.secsTo(QTime::currentTime()));
 

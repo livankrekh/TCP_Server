@@ -1,6 +1,6 @@
 #include "client.h"
 
-Client::Client() : adress("127.0.0.1"), port(2307)
+Client::Client() : adress("127.0.0.1")
 {
     this->name = QString("Client #") + QString::number(Client::i);
     Client::i += 1;
@@ -19,7 +19,7 @@ void Client::startSend()
     QObject::connect(socket, SIGNAL(disconnected()), this, SLOT(onDisconnected()));
     QObject::connect(socket, SIGNAL(error(QAbstractSocket::SocketError)),
                      this, SLOT(onError(QAbstractSocket::SocketError)));
-    socket->connectToHost(QHostAddress::Any, port);
+    socket->connectToHost(QHostAddress::Any, Client::port);
     this->data_size = qrand() % 9216 + 1024;
     qDebug() << this->name << ": connection...";
 }
