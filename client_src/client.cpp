@@ -47,19 +47,29 @@ void Client::onReadReady()
 {
     QDateTime   currentTime = QDateTime::currentDateTime();
     QByteArray  data_packet;
+    bool        attention;
 
     if (socket == nullptr)
         return ;
 
     data_packet = socket->readAll();
+    attention = false;
     qDebug() << "\033[1m\033[32m" << this->name << " accepted data from packet #"
              << Client::packet << " (" << startTime.msecsTo(currentTime) << " msec )\033[0m";
-    std::cout << "\033[1m\033[35mData from Packet #" << Client::packet << std::endl << "[";
+    std::cout << "\033[1m\033[35mData from Packet #" << Client::packet << std::endl << "\033[0m[";
     for (int i = 0; i < data_packet.size(); i++)
     {
-        std::cout << std::bitset<8>(data_packet[i]) << ",";
+        if (data_packet[i] == 0)
+            attention = true;
+        if (data_packet[i] <= 10)
+            std::cout << "\033[31m";
+        else
+            std::cout << "\033[32m";
+        std::cout << std::bitset<8>(data_packet[i]) << "\033[0m,";
     }
     std::cout << "\b]\033[0m" << std::endl;
+    if (attention)
+        qDebug() << "\033[31m" << QString("АВАРИЯ!").toUtf8() << "\033[0m";
     Client::packet += 1;
 
     delete socket;

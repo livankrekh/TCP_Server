@@ -24,11 +24,11 @@ int main(int argc, char *argv[])
             pool_size = 4;
     }
 
-    Client              client_pool[pool_size];
-    QTimer              timers[pool_size];
-
     if (argc > 3)
         timeout = atoi(argv[3]);
+
+    Client              client_pool[pool_size];
+    QTimer              timers[pool_size];
 
     qsrand(midnight.secsTo(QTime::currentTime()));
 
