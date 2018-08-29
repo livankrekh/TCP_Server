@@ -12,6 +12,7 @@ Or open .pro files in server_src and client_src dirs by QtCreator
 ```
 > ./server (port)
 ```
+By default: port = 2307
 ## Client usage:
 ```
 > ./client (port) (number_of_clients) (timeout_in_msec)
